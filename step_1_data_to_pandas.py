@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords
 
-print("Please Enter the Exact Dataset Main Folder name")
+print("Please Enter the Exact Dataset Main Folder Name")
 folder_name = input()
 
 labels = os.listdir ("Dataset/" + folder_name)
@@ -36,5 +36,6 @@ for i in labels:
 
 all_data = np.asarray(all_data)
 df = pd.DataFrame(all_data)
+print("done$$$$$$$$$$")
 
 df.to_csv('pre_processed_' + folder_name + '.csv', index=False)
