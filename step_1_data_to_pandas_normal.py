@@ -1,6 +1,6 @@
 import os
 import re
-
+import codecs
 import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords
@@ -8,7 +8,7 @@ from nltk.corpus import stopwords
 print("Please Enter the Exact Dataset Main Folder Name")
 folder_name = input()
 
-labels = os.listdir ("Dataset/" + folder_name)
+labels = os.listdir ("training_dataset/" + folder_name)
 if ".DS_Store" in labels:
     labels.remove(".DS_Store")
 
@@ -19,12 +19,12 @@ labels = labels[:5]
 counter = 0
 
 for i in labels:
-    instances_in_a_label = os.listdir ("Dataset/" + folder_name + '/' + i)
+    instances_in_a_label = os.listdir ("training_dataset/" + folder_name + '/' + i)
     all_data_for_a_label = []
     for j in instances_in_a_label:
         # uncomment to debug
         if counter < 2:
-            f = open("Dataset/" + folder_name + '/' + i + '/' + j, "r")
+            f = open("training_dataset/" + folder_name + '/' + i + '/' + j, "r", encoding='latin-1')
             raw_data = f.read()
             preprocessed_data = re.sub('[^a-zA-Z]', ' ', raw_data).lower()
             preprocessed_data = preprocessed_data.split()
@@ -36,6 +36,6 @@ for i in labels:
 
 all_data = np.asarray(all_data)
 df = pd.DataFrame(all_data)
-print("done$$$$$$$$$$")
+print("===========DataFrame-Complete===========")
 
 df.to_csv('pre_processed_' + folder_name + '.csv', index=False)
