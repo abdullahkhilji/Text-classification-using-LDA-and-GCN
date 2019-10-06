@@ -5,6 +5,9 @@ This repository explores Latent Dirichlet Allocation methods for text based clas
 Ohsumed (http://davis.wpi.edu/xmdv/datasets/ohsumed.html)
 A curated text collection from MEDLINE, an online medical information database.
 
+# Pre-Processing
+For pre-processing and arranging the dataset into DataFrame except for 20ng and ohsumed (which are done as given in code `step_1_data_to_pandas_normal.py` remaining datasets have their iPyNB in their respective dataset directories.
+
 # Features
 Our approach is an ensemble work of features from LDA and Graph Convolution.
 
