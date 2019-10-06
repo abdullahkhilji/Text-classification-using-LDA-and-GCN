@@ -14,7 +14,7 @@ print('Input DataSet Name')
 dataset = input()
 print('Input Number of Classes')
 classes = int(input())
-dataset_path = 'pre_processed_dataframe_all/' + 'pre_processed_' + dataset + '.csv'
+dataset_path = 'pre_processed_df/' + 'pre_processed_' + dataset + '.csv'
 
 # spacy for lemmatization
 
