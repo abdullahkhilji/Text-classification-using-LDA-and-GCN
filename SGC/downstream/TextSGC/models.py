@@ -1,3 +1,7 @@
+import torch
+import torch.nn as nn
+
+
 class SGC(nn.Module):
     def _init_(self, nfeat, nclass, bias=False):
         super(SGC, self)._init_()

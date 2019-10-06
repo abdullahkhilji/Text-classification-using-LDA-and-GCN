@@ -13,6 +13,7 @@ from utils import *
 from models import SGC
 import json
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', type=str, default='20ng', help='Dataset string.')
 parser.add_argument('--no-cuda', action='store_true', default=False,
@@ -101,7 +102,8 @@ def eval_linear(model, features, lda_features, label, binary=False):
         'accuracy': acc
     }
 if __name__ == '__main__':
-    lda_dict = json.load(open('index_dict.json', 'r'))
+    # lda_dict = json.load(open('index_dict.json', 'r'))
+
     if args.dataset == "mr": nclass = 1
     else: nclass = label_dict["train"].max().item()+1
     if not args.preprocessed:
@@ -113,6 +115,11 @@ if __name__ == '__main__':
             "{}.pkl".format(args.dataset)), "rb") as prep:
             feat_dict =  pkl.load(prep)
         precompute_time = 0
+
+    print(feat_dict['train'])
+    print(feat_dict['train'].shape)
+
+    lda_dict = feat_dict
 
     model = SGC(nfeat=feat_dict["train"].size(1),
                 nclass=nclass)

@@ -12,6 +12,8 @@ import spacy
 
 print('Input DataSet Name')
 dataset = input()
+print('Input Number of Classes')
+classes = int(input())
 dataset_path = 'pre_processed_dataframe_all/' + 'pre_processed_' + dataset + '.csv'
 
 # spacy for lemmatization
@@ -114,7 +116,7 @@ print(corpus[:1])
 # Build LDA model
 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                            id2word=id2word,
-                                           num_topics=23,
+                                           num_topics=classes,
                                            random_state=100,
                                            update_every=1,
                                            chunksize=100,
