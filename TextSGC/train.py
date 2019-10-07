@@ -13,7 +13,6 @@ from utils import *
 from models import SGC
 import json
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', type=str, default='20ng', help='Dataset string.')
 parser.add_argument('--no-cuda', action='store_true', default=False,
@@ -75,7 +74,7 @@ def train_linear(model, feat_dict, lda_dict, weight_decay, binary=False):
         optimizer.step(closure)
 
     train_time = time.perf_counter()-start
-    val_res = eval_linear(model, feat_dict["val"].cuda(), lda_dict["val"].cuda(),
+    val_res = eval_linear(model, feat_dict["val"].cuda(), torch.from_numpy(np.asarray(lda_dict["val"])).cuda(),
                           label_dict["val"].cuda(), binary)
     return val_res['accuracy'], model, train_time
 
@@ -93,7 +92,6 @@ def eval_linear(model, features, lda_features, label, binary=False):
         loss = criterion(act(output), label)
         if not binary: predict_class = output.max(1)[1]
         else: predict_class = act(output).gt(0.5).float()
-
         correct = torch.eq(predict_class, label).long().sum().item()
         acc = correct/predict_class.size(0)
 
@@ -102,7 +100,8 @@ def eval_linear(model, features, lda_features, label, binary=False):
         'accuracy': acc
     }
 if __name__ == '__main__':
-    # lda_dict = json.load(open('index_dict.json', 'r'))
+    select = 'ohsumed'
+    lda_dict = json.load(open('../link_dict_files/' + select + '_link.json', 'r'))
 
     if args.dataset == "mr": nclass = 1
     else: nclass = label_dict["train"].max().item()+1
@@ -116,10 +115,7 @@ if __name__ == '__main__':
             feat_dict =  pkl.load(prep)
         precompute_time = 0
 
-    print(feat_dict['train'])
-    print(feat_dict['train'].shape)
-
-    lda_dict = feat_dict
+    print(feat_dict["train"].size(), len(lda_dict["train"]))
 
     model = SGC(nfeat=feat_dict["train"].size(1),
                 nclass=nclass)
