@@ -33,7 +33,7 @@ stop_words.extend(['from', 'subject', 're', 'edu', 'use'])
 
 df = pd.read_csv(dataset_path)
 orig_df = df
-df.rename(columns={'0': "content", '1': "labels"}, inplace=True)
+df.rename(columns={'1': "content", '2': "labels"}, inplace=True)
 df = df[:-1]
 data = df.content.values.tolist()
 data_list = list(data)

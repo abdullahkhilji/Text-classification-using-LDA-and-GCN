@@ -30,7 +30,7 @@ for i in labels:
         preprocessed_data = preprocessed_data.split()
         preprocessed_data = [word for word in preprocessed_data if word not in stopwords.words('english')]
         preprocessed_data = ' '.join(preprocessed_data)
-        all_data.append([preprocessed_data, i])
+        all_data.append([j, preprocessed_data, i])
     #        counter += 1
     # counter = 0
 
