@@ -6,10 +6,12 @@ import torch.nn.functional as F
 class SGC(nn.Module):
     def __init__(self, nfeat, nclass, bias=False):
         super(SGC, self).__init__()
+        self.nclass = nclass
         self.W = nn.Linear(nfeat, nclass, bias=bias)
         torch.nn.init.xavier_normal_(self.W.weight)
-        self.dense = nn.Linear(46, nclass, bias=bias)
-        self.dense1 = nn.Linear(23, nclass, bias=bias)
+        # 2 for mr
+        self.dense = nn.Linear(2*nclass, nclass, bias=bias)
+        self.dense1 = nn.Linear(nclass, nclass, bias=bias)
         self.dropout = nn.Dropout(0.9)
         self.bn1 = nn.BatchNorm1d(num_features=46)
         self.sm = nn.Softmax()
@@ -24,7 +26,10 @@ class SGC(nn.Module):
         return torch.stack(new_tensor).transpose(0, 1)
 
     def forward(self, x, lda_features):
+        # print(x.size(), lda_features.size())
+        # print(self.nclass)
         out = self.W(x)
+        # print(out.size())
         # out = self.sm(out)
         out = out.float()
         # lda_features = self.sm(lda_features)
@@ -37,7 +42,7 @@ class SGC(nn.Module):
         new_out = self.dense(new_out)
         # new_out = self.dropout(new_out)
         new_out = new_out + out
-        
+
         new_out1 = self.dense1(new_out)
         new_out1 = self.dropout(new_out1)
         new_out = new_out + new_out1
