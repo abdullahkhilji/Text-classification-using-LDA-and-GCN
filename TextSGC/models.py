@@ -32,11 +32,23 @@ class SGC(nn.Module):
         new_out = torch.cat((out, lda_features), dim=1)
         new_out = self.gather(new_out)
         # new_out = self.bn1(new_out)
-        # new_out = self.dropout(new_out)
-        new_out = self.dense(new_out)
+
         new_out = self.dropout(new_out)
+        new_out = self.dense(new_out)
+        # new_out = self.dropout(new_out)
         new_out = new_out + out
+        
         new_out1 = self.dense1(new_out)
         new_out1 = self.dropout(new_out1)
         new_out = new_out + new_out1
+
+        new_out1 = self.dense1(new_out)
+        new_out1 = self.dropout(new_out1)
+        new_out = new_out + new_out1
+
+        new_out1 = self.dense1(new_out)
+        new_out1 = self.dropout(new_out1)
+        new_out = new_out + new_out1
+
+
         return new_out

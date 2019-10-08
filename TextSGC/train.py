@@ -115,7 +115,7 @@ if __name__ == '__main__':
             feat_dict =  pkl.load(prep)
         precompute_time = 0
 
-    print(feat_dict["train"].size(), len(lda_dict["train"]))
+    # print(feat_dict["train"].size(), len(lda_dict["train"]))
 
     model = SGC(nfeat=feat_dict["train"].size(1),
                 nclass=nclass)
