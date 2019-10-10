@@ -9,7 +9,7 @@ class SGC(nn.Module):
         self.nclass = nclass
         self.W = nn.Linear(nfeat, nclass, bias=bias)
         torch.nn.init.xavier_normal_(self.W.weight)
-        # 2 for mr
+        # 2 for mr else 2 * class
         self.dense = nn.Linear(2*nclass, nclass, bias=bias)
         self.dense1 = nn.Linear(nclass, nclass, bias=bias)
         self.dropout = nn.Dropout(0.9)

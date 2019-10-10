@@ -11,6 +11,7 @@ import tabulate
 from functools import partial
 from utils import *
 from models import SGC
+from focal_loss import FocalLoss
 import json
 
 parser = argparse.ArgumentParser()
@@ -50,6 +51,8 @@ features = torch.arange(sp_adj.shape[0]).to(args.device)
 adj = sparse_to_torch_sparse(sp_adj, device=args.device)
 
 
+
+
 def train_linear(model, feat_dict, lda_dict, weight_decay, binary=False):
     if not binary:
         act = partial(F.log_softmax, dim=1)
@@ -66,8 +69,9 @@ def train_linear(model, feat_dict, lda_dict, weight_decay, binary=False):
         def closure():
             optimizer.zero_grad()
             output = model(feat_dict["train"].cuda(), torch.from_numpy(np.asarray(lda_dict["train"])).cuda()).squeeze()
-            l2_reg = 0.5*weight_decay*(model.W.weight**2).sum()
-            loss = criterion(act(output), label_dict["train"].cuda())+l2_reg
+            # l2_reg = 0.5*weight_decay*(model.W.weight**2).sum()
+            # loss = criterion(act(output), label_dict["train"].cuda())+l2_reg
+            loss = loss_func(act(output), label_dict["train"].cuda())
             loss.backward()
             return loss
 
@@ -89,7 +93,8 @@ def eval_linear(model, features, lda_features, label, binary=False):
 
     with torch.no_grad():
         output = model(features, lda_features).squeeze()
-        loss = criterion(act(output), label)
+        # loss = criterion(act(output), label)
+        loss = loss_func(act(output), label)
         if not binary: predict_class = output.max(1)[1]
         else: predict_class = act(output).gt(0.5).float()
         correct = torch.eq(predict_class, label).long().sum().item()
@@ -100,7 +105,7 @@ def eval_linear(model, features, lda_features, label, binary=False):
         'accuracy': acc
     }
 if __name__ == '__main__':
-    select = '20ng'
+    select = 'R8'
     lda_dict = json.load(open('../link_dict_files/' + select + '_link.json', 'r'))
 
     if args.dataset == "mr": nclass = 1
@@ -119,6 +124,7 @@ if __name__ == '__main__':
 
     model = SGC(nfeat=feat_dict["train"].size(1),
                 nclass=nclass)
+    loss_func= FocalLoss()
     if args.cuda: model.cuda()
     val_acc, best_model, train_time = train_linear(model, feat_dict, lda_dict, args.weight_decay, args.dataset=="mr")
     test_res = eval_linear(best_model, feat_dict["test"].cuda(), torch.from_numpy(np.asarray(lda_dict["test"])).cuda(),
