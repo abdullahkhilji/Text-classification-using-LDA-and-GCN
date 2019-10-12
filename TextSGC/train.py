@@ -105,7 +105,8 @@ def eval_linear(model, features, lda_features, label, binary=False):
         'accuracy': acc
     }
 if __name__ == '__main__':
-    select = 'R8'
+    print('Enter Dataset')
+    select = input()
     lda_dict = json.load(open('../link_dict_files/' + select + '_link.json', 'r'))
 
     if args.dataset == "mr": nclass = 1
